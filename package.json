@@ -41,7 +41,7 @@
     "request": "^2.88",
     "rsyncwrapper": "^3.0",
     "sass": "^1.35.2",
-    "sequelize": "^5.22",
+    "sequelize": "^6.32.1",
     "serve-favicon": "^2.5",
     "single-instance": "^0.0",
     "sqlite3": "^5.0",
