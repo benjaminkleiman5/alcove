@@ -18,9 +18,12 @@ services:
         source: node_modules
         target: /opt/alcove/node_modules
     container_name: alcove-dev
-
+  hello-world:
+    build:
+      dockerfile: DockerfileHello
 volumes:
   node_modules:
     name: alcove_node_modules
   config:
     name: alcove_config
+
