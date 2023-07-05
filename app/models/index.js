@@ -27,18 +27,20 @@ module.exports = {
 
     // Read our model definitions and associate relationships
     let sequelize = new Sequelize(test ? DB_TEST_URL : DB_URL, {
-        storage: test ? ':memory:' : path.join(config.data_dir, "events.db"),
-        logging: false
-      });
+      storage: test ? ':memory:' : path.join(config.data_dir, "events.db"),
+      logging: false
+    });
+
     fs.readdirSync(__dirname).filter((file) => {
       return (file.indexOf('.') !== 0) && (file !== 'index.js');
     }).forEach((file) => {
-      let model = sequelize['import'](path.join(__dirname, file));
+      const model = require(path.join(__dirname, file))(sequelize, Sequelize);
       db[model.name] = model;
     });
-    Object.keys(db).forEach((modelName) => {
-      if ('associate' in db[modelName]) {
-        db[modelName].associate(db);
+
+    Object.values(db).forEach((model) => {
+      if ('associate' in model) {
+        model.associate(db);
       }
     });
     if (test)

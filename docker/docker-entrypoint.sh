@@ -53,7 +53,7 @@ else
   echo "data_dir=./data/\n" > etc/alcove/alcove.ini
   echo "log_dir=./logs/\n" >> etc/alcove/alcove.ini
   cat config/alcove.ini >> etc/alcove/alcove.ini
-  echo "[secure]\nkey=/etc/alcove/ssl/ssl.key\ncert=/etc/alcove/ssl/ssl.crt" >> etc/alcove/alcove.ini
+  echo "\n\n[secure]\nkey=/etc/alcove/ssl/ssl.key\ncert=/etc/alcove/ssl/ssl.crt" >> etc/alcove/alcove.ini
 fi
 
 # Startup server
