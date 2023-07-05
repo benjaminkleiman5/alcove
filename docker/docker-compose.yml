@@ -20,6 +20,7 @@ services:
     container_name: alcove-dev
   hello-world:
     build:
+      context: .
       dockerfile: DockerfileHello
 volumes:
   node_modules:
