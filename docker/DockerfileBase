@@ -1,0 +1,29 @@
+FROM alpine
+
+# Update the package repositories and install OpenSSH client
+RUN apk update && apk upgrade && apk add openssh-client
+
+# Generate SSH key pair
+RUN mkdir /root/.ssh && \
+    ssh-keygen -t rsa -f /root/.ssh/id_rsa -q -N ""
+
+# Set appropriate permissions for the private key
+RUN chmod 400 /root/.ssh/id_rsa
+
+# Print out the public key
+RUN cat /root/.ssh/id_rsa.pub
+
+# Set the entrypoint to an empty command. Allows child containers to override the entrypoint
+ENTRYPOINT []
+
+# Copy the entrypoint script
+#COPY helloworld.sh /docker-entrypoint.sh
+#RUN chmod +x /docker-entrypoint.sh
+
+# Switch to the "node" user
+#USER node
+
+# Set the entrypoint to execute the script
+#ENTRYPOINT ["/docker-entrypoint.sh"]
+
+

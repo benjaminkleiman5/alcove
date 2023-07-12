@@ -1,0 +1,20 @@
+#Stage 1:
+FROM docker-base AS build
+
+#Get the SSH key
+COPY --from=builder /root/.ssh/id_rsa /root/.ssh/id_rsa
+
+# Print out the public key
+RUN cat /root/.ssh/id_rsa.pub
+
+#Stage 2:
+FROM node:20
+
+# Copy the entrypoint script
+COPY alcovedev.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
+# Set the entrypoint to execute the script
+ENTRYPOINT ["/docker-entrypoint.sh"]
+
+
