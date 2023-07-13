@@ -1,11 +1,6 @@
 #Stage 1:
-FROM docker-base AS build
+FROM docker-base
 
-#Get the SSH key
-COPY --from=builder /root/.ssh/id_rsa /root/.ssh/id_rsa
-
-# Print out the public key
-RUN cat /root/.ssh/id_rsa.pub
 
 #Stage 2:
 FROM node:20

@@ -1,0 +1,10 @@
+#Stage 1:
+FROM docker-base
+
+# Copy the entrypoint script
+COPY alcovebackup.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
+# Set the entrypoint to execute the script
+ENTRYPOINT ["/docker-entrypoint.sh"]
+
