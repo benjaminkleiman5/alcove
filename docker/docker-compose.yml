@@ -2,13 +2,29 @@ version: '3.7'
 
 services:
 
+  # NOTE: Specify base image container without actually needing this service
+  #   The reason for this is the children services need to be built based on 
+  #   the image named by this service. When the system starts, this container
+  #   will start and then immediately exit because it does not contain any
+  #   long running tasks. This is intentional.
+  alcove-base:
+    build:
+      context: .
+      dockerfile: DockerfileBase
+      no_cache: true
+    container_name: alcove-base
+
   alcove-backup:
+    depends_on:
+      - alcove-base
     build:
       context: .
       dockerfile: DockerfileBackup
     container_name: alcove-backup
 
   alcove-dev:
+    depends_on:
+      - alcove-base
     build:
       context: .
       dockerfile: DockerfileDev

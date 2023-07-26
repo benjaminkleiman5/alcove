@@ -1,8 +1,21 @@
 # Stage 1:
-FROM alcove_base
+# Use our base image in order to share an SSH key across containers
+#
+# TODO: This assumes the default docker compose project name (basename of parent dir)
+#   This name doesn't match our ideal naming convention, AND will break if the "-p"
+#   flag is passed to the `docker compose` command. Therefore, it will be a future
+#   area for improvement to create a start script that consistently names images the
+#   way that we want them to be named, for clarity sake.
+#
+#   We will use an example from previous projects to create this start script, and also
+#   use the start script to define environment variables from a config file so that 
+#   we can start making the automatic configuration process more dynamic as well.
+FROM docker_alcove-base
 
 
 # Stage 2:
+# Install the necessary Node / Deps for our Alcove installation (while retaining the
+# SSH key from Stage 1)
 FROM node:20
 
 # Retrieve the generated SSH key from our base image
