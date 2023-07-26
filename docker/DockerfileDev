@@ -1,9 +1,14 @@
-#Stage 1:
-FROM docker-base
+# Stage 1:
+FROM alcove_base
 
 
-#Stage 2:
+# Stage 2:
 FROM node:20
+
+# Retrieve the generated SSH key from our base image
+# TODO: Put these into the correct place (not the container root)
+COPY --from=0 /root/.ssh/id_rsa /
+COPY --from=0 /root/.ssh/id_rsa.pub /
 
 # Copy the entrypoint script
 COPY alcovedev.sh /docker-entrypoint.sh
