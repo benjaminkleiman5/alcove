@@ -1,15 +1,47 @@
-#Stage 1:
 FROM docker-base
 
-
-#Stage 2:
 FROM node:20
 
-# Copy the entrypoint script
-COPY alcovedev.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
+RUN mkdir -p /home/node/.ssh/id_rsa.pub
+RUN mkdir -p /home/node/.ssh/id_rsa
+RUN cp /root/.ssh/id_rsa.pub /home/node/.ssh/id_rsa.pub
+RUN chown node /home/node/.ssh/id_rsa.pub
+RUN chmod 400 /home/node/.ssh/id_rsa
 
-# Set the entrypoint to execute the script
-ENTRYPOINT ["/docker-entrypoint.sh"]
+
+# Create app directories
+RUN mkdir -p /etc/alcove/ssl
+WORKDIR /opt/alcove/
+
+# Install sendmail compatible executable
+RUN apt-get update && apt-get install -y ssmtp && echo "FromLineOverride=YES" >> /etc/ssmtp/ssmtp.conf
+
+# Turn off StrictHostKeyChecking
+RUN echo "StrictHostKeyChecking no" >> /etc/ssh/ssh_config
+
+# Install rsync, sudo
+RUN apt-get install -y rsync sudo
+
+# Generate self-signed cert
+# TODO: allow for an env variable to specify the cert params
+RUN mkdir -p /etc/alcove/ssl/; \
+  openssl ecparam -out /etc/alcove/ssl/ssl.key -name prime256v1 -genkey; \
+  openssl req -x509 -new -key /etc/alcove/ssl/ssl.key -out /etc/alcove/ssl/ssl.crt \
+    -days 365 -subj "/C=US/ST=Iowa/L=Coralville/O=Bio::Neos, Inc./CN=localhost"; \
+  chown node:node /etc/alcove/ssl/*
+
+# Entrypoint
+COPY alcove-dev.sh /docker-entrypoint.sh
+
+# Drop privileges, retain sudo capability for data/logs
+RUN chown -R node:node .
+RUN echo 'Cmnd_Alias CHMOD=/bin/chmod 777 /opt/alcove/*' >> /etc/sudoers; \
+    echo 'node ALL=(ALL:ALL) NOPASSWD:CHMOD' >> /etc/sudoers
+
+USER node
+EXPOSE 3000
+
+CMD [ "/bin/sh", "/docker-entrypoint.sh" ]
+
 
 
