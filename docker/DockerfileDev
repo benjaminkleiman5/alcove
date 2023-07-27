@@ -1,13 +1,27 @@
-FROM docker-base
+# Use our base image in order to share an SSH key across containers
+ #
+ # TODO: This assumes the default docker compose project name (basename of parent dir)
+ #   This name doesn't match our ideal naming convention, AND will break if the "-p"
+ #   flag is passed to the `docker compose` command. Therefore, it will be a future
+ #   area for improvement to create a start script that consistently names images the
+ #   way that we want them to be named, for clarity sake.
+ #
+ #   We will use an example from previous projects to create this start script, and also
+ #   use the start script to define environment variables from a config file so that
+ #   we can start making the automatic configuration process more dynamic as well.
+FROM docker-alcove-base
 
+# Stage 2:
+ # Install the necessary Node / Deps for our Alcove installation (while retaining the
+ # SSH key from Stage 1)
 FROM node:20
 
-RUN mkdir -p /home/node/.ssh/id_rsa.pub
-RUN mkdir -p /home/node/.ssh/id_rsa
-RUN cp /root/.ssh/id_rsa.pub /home/node/.ssh/id_rsa.pub
-RUN chown node /home/node/.ssh/id_rsa.pub
+# Retrieve the generated SSH key from our base image
+# TODO: Put these into the correct place (not the container root)
+COPY --from=0 /root/.ssh/id_rsa /home/node/.ssh/id_rsa
+COPY --from=0 /root/.ssh/id_rsa.pub /home/node/.ssh/id_rsa.pub
 RUN chmod 400 /home/node/.ssh/id_rsa
-
+RUN chown node /home/node/.ssh/id_rsa
 
 # Create app directories
 RUN mkdir -p /etc/alcove/ssl
@@ -32,6 +46,7 @@ RUN mkdir -p /etc/alcove/ssl/; \
 
 # Entrypoint
 COPY alcove-dev.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
 
 # Drop privileges, retain sudo capability for data/logs
 RUN chown -R node:node .
@@ -41,7 +56,8 @@ RUN echo 'Cmnd_Alias CHMOD=/bin/chmod 777 /opt/alcove/*' >> /etc/sudoers; \
 USER node
 EXPOSE 3000
 
-CMD [ "/bin/sh", "/docker-entrypoint.sh" ]
+# Set the entrypoint to execute the script
+ENTRYPOINT ["/docker-entrypoint.sh"]
 
 
 

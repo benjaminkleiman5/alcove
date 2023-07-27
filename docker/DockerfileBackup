@@ -1,9 +1,9 @@
 # Use our base image in order to share an SSH key across containers
 # TODO: See note in `DcokerfileDev` about this base image name
-FROM docker_alcove-base
+FROM docker-alcove-base
 
 # Copy the entrypoint script
-COPY alcovebackup.sh /docker-entrypoint.sh
+COPY alcove-backup.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 
 # Set the entrypoint to execute the script

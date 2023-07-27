@@ -1,4 +1,4 @@
-const path = require('path');
+    const path = require('path');
     express = require('express'),
     router = express.Router(),
     Op = require('sequelize').Op,
@@ -137,7 +137,7 @@ function getBackupEvents(machine, CALENDAR_ROWS = 5)
     // TODO: We need additional information from the DB events, either load these here or request via AJAX
     let backupEvents = machine.buckets
       .filter(bucket => {
-        return (bucket.backup)
+        return (bucket.backup);
       })
       .map(bucket => {
         return { 

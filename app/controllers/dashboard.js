@@ -200,5 +200,5 @@ function getScheduledBackups(machineName)
 }
 
 function getMachine(machineName){
-  return system.getMachines()[machineName]
+  return system.getMachines()[machineName];
 }
