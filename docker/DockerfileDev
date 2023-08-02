@@ -17,7 +17,6 @@ FROM docker-alcove-base
 FROM node:20
 
 # Retrieve the generated SSH key from our base image
-# TODO: Put these into the correct place (not the container root)
 COPY --from=0 /root/.ssh/id_rsa /home/node/.ssh/id_rsa
 COPY --from=0 /root/.ssh/id_rsa.pub /home/node/.ssh/id_rsa.pub
 RUN chmod 400 /home/node/.ssh/id_rsa
@@ -25,6 +24,9 @@ RUN chown node /home/node/.ssh/id_rsa
 
 # Create app directories
 RUN mkdir -p /etc/alcove/ssl
+
+
+
 WORKDIR /opt/alcove/
 
 # Install sendmail compatible executable

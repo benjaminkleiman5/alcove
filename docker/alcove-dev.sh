@@ -25,6 +25,8 @@ sudo chmod 777 /opt/alcove/public/css/style.css
 
 mkdir -p config
 mkdir -p config/machines
+mkdir -p /var/log/alcove
+chmod 777 /var/log/alcove
 
 content_alcove="ip='127.0.0.1'
 port=3000
