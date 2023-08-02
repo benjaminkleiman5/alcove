@@ -26,34 +26,56 @@ sudo chmod 777 /opt/alcove/public/css/style.css
 mkdir -p config
 mkdir -p config/machines
 
-content_alcove="
-                log_level='DEBUG'
-                data_dir='data/'
-                [secure]
-                key='./etc/alcove/ssl/ssl.key'
-                cert='./etc/alcove/ssl/ssl.crt'
-                [rsync]
-                [rsync.retry]
-                [notifications]
-                summary_schedule='0,1,2,3,4,5,6;[17:01]'
-                email_to[]='your.email@gmail.com'
-                email_from='your.email@gmail.com'
-                [notifications.smtp]
-                host='smtp.gmail.com'
-                port=587
-                user='your.email@gmail.com'
-                pass='your_password'
-                [notifications.sms]
-                [notifications.slack]"
-file_path_alcove="config/alcove.ini"
+content_alcove="ip='127.0.0.1'
+port=3000
+log_dir='/var/log/alcove'
+log_level='ERROR'
+data_dir='data/'
 
-content="
-         name=alcove-dev-container
-         host=localhost
-         backup_directories[] = /backup-test"
+                ; Allow the web server to initiate sessions even if it is likely that the
+                ; session ID will be sent over plaintext (not configured with HTTPS enabled,
+                ; and no forward proxy detected that is using HTTPS). It might be required
+                ; to enable this if you have a broken forward proxy that is unable to set
+                ; the "X-Forwarded-Proto" header.
+                ;
+                ; ** Use with caution **
+                ; This setting enables the system to operate in a manner that could allow
+                ; for trivial session hijacking to occur...
+                ;allow_insecure=false
+[secure]
+key='/etc/ssl/ssl.key'
+cert='/etc/ssl/ssl.crt'
+[rsync]
+max_simultaneous = 6
+identity = '/home/node/.ssh/id_rsa'
+user = 'root'
+[rsync.retry]
+max_attempts=4
+time = 3
+multiplier = 2.718
+[notifications]
+summary_schedule='0,1,2,3,4,5,6;[17:01]'
+email_to[]='user@bioneos.com'
+email_from='info@bioneos.com'
+[notifications.smtp]
+host='smtp.gmail.com'
+port=587
+user='example@gmail.com'
+pass='password1234'
+[notifications.sms]
+[notifications.slack]
+"
+content_machine="name=alcove-dev-container
+host=localhost
+schedule='0,1,2,3,4,5,6(7);[03:00]'"
+
+file_path="config/alcove.ini"
+
+echo "$content_alcove" > "$file_path"
+
 file_path="config/machines/machine.ini"
 
-echo "$content" > "$file_path"
+echo "$content_machine" > "$file_path"
 
 npx gulp
 
