@@ -6,30 +6,48 @@ services:
   #   The reason for this is the children services need to be built based on 
   #   the image named by this service. When the system starts, this container
   #   will start and then immediately exit because it does not contain any
-  #   long running tasks. This is intentional.
-  alcove-base:
+  #   long-running tasks. This is intentional.
+
+  base:
     build:
       context: .
       dockerfile: DockerfileBase
       no_cache: true
     container_name: alcove-base
 
-  alcove-backup:
+
+  backup:
     depends_on:
-      - alcove-base
+      - base
     build:
       context: .
       dockerfile: DockerfileBackup
     container_name: alcove-backup
 
-  alcove-dev:
+  dev:
     depends_on:
-      - alcove-base
+      - base
     build:
       context: .
       dockerfile: DockerfileDev
     environment:
         - NODE_ENV="development"
+        - EMAIL_TO=${EMAIL_TO}
+        - EMAIL_FROM=${EMAIL_FROM}
+        - PORT=${PORT}
+        - MAX_SIMULTANEOUS=${MAX_SIMULTANEOUS}
+        - MAX_ATTEMPTS=${MAX_ATTEMPTS}
+        - SUMMARY_SCHEDULE=${SUMMARY_SCHEDULE}
+        - TIME=${TIME}
+        - MULTIPLIER=${MULTIPLIER}
+        - TAG=${TAG}
+        - HOST=${HOST}
+        - PORTS=${PORTS}
+        - USER=${USER}
+        - PASS=${PASS}
+        - NAME=${NAME}
+        - MACHINE_HOST=${MACHINE_HOST}
+        - SCHEDULE=${SCHEDULE}
     #ports:
     #  - "127.0.0.1:443:3000"
     volumes:
@@ -40,6 +58,7 @@ services:
           source: node_modules
           target: /opt/alcove/node_modules
     container_name: alcove-dev
+
 
 volumes:
     node_modules:

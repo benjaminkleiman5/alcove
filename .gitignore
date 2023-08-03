@@ -8,6 +8,7 @@ logs
 etc/alcove/*
 config/*
 dist
+.env
 
 # Temporary disk storage for tests
 tests/tmp**
