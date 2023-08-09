@@ -48,8 +48,8 @@ services:
         - NAME=${NAME}
         - MACHINE_HOST=${MACHINE_HOST}
         - SCHEDULE=${SCHEDULE}
-    #ports:
-    #  - "127.0.0.1:443:3000"
+    ports:
+      - "127.0.0.1:443:3000"
     volumes:
         - type: bind
           source: ../

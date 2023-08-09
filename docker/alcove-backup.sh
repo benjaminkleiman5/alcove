@@ -30,8 +30,3 @@ else
   echo "Key authorized successfully."
 
 fi
-
-while true; do
-  echo "loop"
-  sleep 60
-done

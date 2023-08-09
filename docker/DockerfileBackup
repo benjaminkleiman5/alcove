@@ -1,5 +1,4 @@
 # Use our base image in order to share an SSH key across containers
-# TODO: See note in `DcokerfileDev` about this base image name
 FROM alcove-base
 
 # Copy the entrypoint script
