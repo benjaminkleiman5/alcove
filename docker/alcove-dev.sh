@@ -28,7 +28,12 @@ mkdir -p config/machines
 mkdir -p /var/log/alcove
 chmod 777 /var/log/alcove
 
-#want to put this inside of an if block so we aren't creating a config file everytime ideally
+#Want it to set a backup 1 minute from the current time
+#Day of the week as a number (Sunday = 0, Monday = 1, etc.)
+day=$(date +%w)
+time_one_min_later=$(date '+%H:%M' --date='1 minute')
+backup_schedule="|${day}(2);[${time_one_min_later}]"
+NEW_SCHEDULE="$SCHEDULE$backup_schedule"
 
 content_alcove="ip='127.0.0.1'
 port='$PORT'
@@ -71,7 +76,7 @@ pass='$PASS'
 "
 content_machine="name='$NAME'
 host='$MACHINE_HOST'
-schedule='$SCHEDULE'"
+schedule='$NEW_SCHEDULE'"
 
 file_path="config/alcove.ini"
 
@@ -80,6 +85,7 @@ echo "$content_alcove" > "$file_path"
 file_path="config/machines/machine.ini"
 
 echo "$content_machine" > "$file_path"
+
 
 npx gulp
 
